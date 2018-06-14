@@ -55,8 +55,17 @@ Training the model involves the following steps:
 2. Run the trainer on the training data
 
 ### Step 1 of 2: Prepare the training, validation and test datasets
-1. Grab a large set of video files, or frame sequences.
-2. Organize them as follows:
+1. Grab a large set of video files, or frame sequences. Some datasets to look at are [GRID](http://spandh.dcs.shef.ac.uk/gridcorpus/), [AMFED](https://www.affectiva.com/facial-expression-dataset/), [DISFA](http://www.engr.du.edu/mmahoor/DISFA.htm), [HMDB](http://serre-lab.clps.brown.edu/resource/hmdb-a-large-human-motion-database/) and [Cohn-Kanade](http://www.pitt.edu/~emotion/ck-spread.htm). **VERY IMPORTANT**: Be sure to read the EULAs before you use any of these datasets. **Some datasets such as the Cohn-Kanade data set tend to be for non-commercial use only. If you are going to use this Lip Movement Net codebase for commercial use, you may not be able to use such datasets without the dataset owner's consent. Better check with them first**
+2. Organize the datasets as follows:
+   1. Create a top level dataset/ directory
+   2. Create a train/, val/, test/, models/ and tensorboard/ directories under dataset/
+   3. Under each one of \[dataset/train/, dataset/val/, dataset/test/\] directories:
+      1. Create a directory named after each class you want to detect. For e.g. dataset/train/speech/ and dataset/train/silence/, dataset/val/speech/ and dataset/val/silence/ and so on.
+      3. Under each class directory such as dataset/train/speech/ and dataset/train/silence/, create a directory for each appropriate dataset. For e.g. if you are using the GRID and HMDB datasets for generating speech sequences, and the HMDB dataset for generating the silence class sequences, create directories as follows: dataset/train/speech/GRID/, dataset/train/speech/HMDB/, dataset/val/speech/HMDB/, dataset/train/silence/HMDB/ and so on.
+      4. Next, under each one of the dataset directories created in above step, such as GRID/ and HMDB/, create a directory for each person in that dataset. For e.g. the GRID dataset contains speakers numbered from 1 thru 34. So you would create a directory called dataset/train/speech/GRID/1/, dataset/train/speech/GRID/2/, dataset/train/speech/GRID/3/ etc. The HMDB dataset contains video files orgainzed by category such a talk, chew etc. Each video file is for one individual person. So just put all the video files under chew under dataset/train/silence/HMDB/, or dataset/val/silence/HMDB/ directories. No need to create individual person directories. The prepare script will assume that each video file belongs to a different person.
+  4. Ensure that you have a good mix of speakers in train, val and test, and that **there are no common video files among train, val and test!**. Preferably keep a different disjoiint set of speakers or persons among train/, val/ and test/ directories for better training results.
+  5. Refer to the ![](lip-movement-net/assets/dataset_folder_structure.txt) file for an illustration of this directory structure.
+  6. Keep the dataset/models/ and dataset/tensorboard/ directories empty. The training script will automatically fill populate these two directories.
 3. Open prepare_training_dataset.py
 4. Set the following parameters to the values you want for your network:
 3. Run the following command:
@@ -98,7 +107,7 @@ To run the trainer in the Grid Search mode, perform these steps:
 Follow these steps to extend the network to detect other classes such **laughing, smiling, chewing etc**:
 1. In prepare_training_dataset.py, add class strings such as 'chew', laugh', 'smile' to the class_hash dictionary. for e.g.:
 class_hash = {'other': 0, 'speech': 1, 'chew': 2, 'laugh': 3}
-2. Organize your training videos dataset as follows:
+2. Organize your training videos dataset as described earlier in this readme.
 3. Run the following command to create the training data:
 ```python
    python prepare_training_dataset.py -i <path to input directory> -o <path to output sequences dataset directory>
