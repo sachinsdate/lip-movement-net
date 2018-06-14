@@ -15,6 +15,9 @@ A simple RNN based detector that determines whether someone is speaking by watch
 5. The RNN outputs a 2-element tuple (speech, silence) containing the respective probability of whether the speaker was speaking or was silent during the preceding 25 video frames.
 6. Slide forward the 25-frame window by one frame through the input video, and repeat steps 2 through 5.
 
+### Figure 1: Calculate the lip separation distance
+![](assets/figure1.png)
+
 ## How to use the codebase
 You can either use one of the pre-trained networks, or you can train your own model using the codebase.
 
