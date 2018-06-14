@@ -131,6 +131,3 @@ A significant downside of the lip-separation distance technique is that it's acc
 2. The validation was performed on a further 2000 speech and non-speech sequences, each of 25 frames length. 
 3. The training dataset contained sequenced from <> distinct individuals. The validation dataset contained sequences from <> distinct individuals.
 4. The individuals used in the validation dataset were entirely different than those used in the training dataset. 
-5. The following datasets were used for training:
-   - [GRID](http://spandh.dcs.shef.ac.uk/gridcorpus/) and [HMDB](http://serre-lab.clps.brown.edu/resource/hmdb-a-large-human-motion-database/) for generating speech sequences.
-   - [MIT AMFED](https://www.affectiva.com/facial-expression-dataset/), [DISFA](http://www.engr.du.edu/mmahoor/DISFA.htm), [Cohn-Kanade](http://www.pitt.edu/~emotion/ck-spread.htm) for generating non-speech sequences.
