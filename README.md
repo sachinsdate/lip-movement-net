@@ -51,11 +51,17 @@ In all pre-trained models in the models directory, the final output layer is a 2
 
 ### How to train the Lip Movement Net model
 Training the model involves the following steps:
-1. Prepare the training, validation and test datasets
-2. Run the trainer on the training data
+1. Prepare the training, validation and test datasets.
+2. Run the trainer on the training data.
 
 ### Step 1 of 2: Prepare the training, validation and test datasets
-1. Grab a large set of video files, or frame sequences. Some datasets to look at are [GRID](http://spandh.dcs.shef.ac.uk/gridcorpus/), [AMFED](https://www.affectiva.com/facial-expression-dataset/), [DISFA](http://www.engr.du.edu/mmahoor/DISFA.htm), [HMDB](http://serre-lab.clps.brown.edu/resource/hmdb-a-large-human-motion-database/) and [Cohn-Kanade](http://www.pitt.edu/~emotion/ck-spread.htm). **VERY IMPORTANT**: Be sure to read the EULAs before you use any of these datasets. **Some datasets such as the Cohn-Kanade data set tend to be for non-commercial use only. If you are going to use this Lip Movement Net codebase for commercial use, you may not be able to use such datasets without the dataset owner's consent. Better check with the data set's owner first.**
+1. Grab a large set of video files, or frame sequences. Some datasets to look at are:
+   1. [GRID](http://spandh.dcs.shef.ac.uk/gridcorpus/),
+   2. [AMFED](https://www.affectiva.com/facial-expression-dataset/),
+   3. [DISFA](http://www.engr.du.edu/mmahoor/DISFA.htm),
+   4. [HMDB](http://serre-lab.clps.brown.edu/resource/hmdb-a-large-human-motion-database/),
+   5. [Cohn-Kanade](http://www.pitt.edu/~emotion/ck-spread.htm),
+   **IMPORTANT**: Be sure to read the EULAs before you use any of these datasets. **Some datasets such as the Cohn-Kanade data set tend to be for non-commercial use only. If you are going to use this Lip Movement Net codebase for commercial use, you may not be able to use such datasets without the dataset owner's consent. Better check with the data set's owner first.**
 2. Organize the datasets as follows:
    1. Create a top level dataset/ directory
    2. Create a train/, val/, test/, models/ and tensorboard/ directories under dataset/
@@ -64,16 +70,18 @@ Training the model involves the following steps:
       3. Under each class directory such as dataset/train/speech/ and dataset/train/silence/, create a directory for each appropriate dataset. For e.g. if you are using the GRID and HMDB datasets for generating speech sequences, and the HMDB dataset for generating the silence class sequences, create directories as follows: dataset/train/speech/GRID/, dataset/train/speech/HMDB/, dataset/val/speech/HMDB/, dataset/train/silence/HMDB/ and so on.
       4. Next, under each one of the dataset directories created in above step, such as GRID/ and HMDB/, create a directory for each person in that dataset. For e.g. the GRID dataset contains speakers numbered from 1 thru 34. So you would create a directory called dataset/train/speech/GRID/1/, dataset/train/speech/GRID/2/, dataset/train/speech/GRID/3/ etc. The HMDB dataset contains video files orgainzed by category such a talk, chew etc. Each video file is for one individual person. So just put all the video files under chew under dataset/train/silence/HMDB/, or dataset/val/silence/HMDB/ directories. No need to create individual person directories. The prepare script will assume that each video file belongs to a different person.
   4. Ensure that you have a good mix of speakers in train, val and test, and that **there are no common video files among train, val and test!**. Preferably keep a different disjoiint set of speakers or persons among train/, val/ and test/ directories for better training results.
-  5. Refer to the [dataset_folder_structure.txt](assets/dataset_folder_structure.txt) file for an illustration of this directory structure.
-  6. Keep the dataset/models/ and dataset/tensorboard/ directories empty. The training script will automatically fill populate these two directories.
+  5. Download and expand the [sample_source_dataset.zip](assets/sample_source_dataset.zip) file to get started with the folder structure.
 3. Open prepare_training_dataset.py
 4. Set the following parameters to the values you want for your network:
+   1. VIDEO_START_OFFSETS
+   2. VIDEO_END_OFFSETS
+   3. CROSS_FILE_BOUNDARIES
 3. Run the following command:
 ```bash
-python prepare_training_dataset.py -i <path to input directory> -o <path to output sequences dataset directory>
+python prepare_training_dataset.py -i <path to input directory> -o <path to output sequences dataset directory> -p <path to facial landmarks model file>
 ```
-Refer to scripts/prepare.bat for an example
-  
+Refer to [prepare.bat](scripts/prepare.bat) for an example command.
+
 ### Step 2 of 2: Run the trainer on the training data
 Run the following command:
 ```bash
@@ -82,7 +90,7 @@ python lip_movement_net.py -i <path to sequences dataset directory>
 Refer to scripts/train.bat for an example
 
 ### Running the trainer in GRID SEARCH mode
-You can run the training algorithm iteratively over a grid of network hyperparameters so as to find a parameter combination that best fits the needs of your domain.
+You can OPTIONALY run the training algorithm iteratively over a grid of network hyperparameters so as to find a parameter combination that best fits the needs of your domain.
 In this mode, the trainer will do the following:
 1. Trains the network on each hyper-parameter combination that you have specified in the grid_options.csv file,
 2. Creates a directory under the \<dataset\>tensorboard directory in which it will create and update the tensorboard log file for that training run.
