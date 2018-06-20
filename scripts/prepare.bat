@@ -1,0 +1,1 @@
+python prepare_training_dataset.py -i C:\Users\Sachin\Downloads\lip_movement\dataset_source -o C:\Users\Sachin\Downloads\lip_movement\dataset_dest -p C:\dlib-19.6.1\models\shape_predictor_68_face_landmarks.dat
