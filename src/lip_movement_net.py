@@ -492,17 +492,16 @@ def test_video(video_path, shape_predictor_file, model):
             img = imresize(img, (256, 320))
             frames.append(img)
 
-    print('Fetched ' + str(len(frames)) + ' from the video.')
+    print('Fetched ' + str(len(frames)) + ' frames from the video.')
     state = 'Processing'
 
     font = cv2.FONT_HERSHEY_SIMPLEX
 
     frame_num = 0
-    k = 0
     input_sequence = []
     while True:
         frame = frames[frame_num]
-        img = frames[k].copy()
+        img = frames[frame_num].copy()
 
         cv2.putText(img, str(frame_num), (2, 10), font, 0.3, (255, 255, 255), 1, cv2.LINE_AA)
 
@@ -588,9 +587,11 @@ def test_video(video_path, shape_predictor_file, model):
 
 
 def get_facial_landmark_vectors_from_frame(frame):
+    print('Fetching face detections and landmarks...')
     dets = detector(frame, 1)
     if dets is None:
-        return []
+        print('no detections')
+        return (None, None)
     # assume only 1 face per frame
     facial_points = []
     for k, d in enumerate(dets):
@@ -607,6 +608,7 @@ def get_facial_landmark_vectors_from_frame(frame):
         if len(facial_points) > 0:
             break
 
+    print('Returning ('+str(len(dets)) + ', ' + str(len(facial_points)))
     return (dets, facial_points)
 
 
