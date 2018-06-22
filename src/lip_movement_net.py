@@ -21,22 +21,13 @@
 
 import datetime
 import argparse
-import keras
-import pickle
-import sys
 
-import multiprocessing
-
-from keras.callbacks import ModelCheckpoint, EarlyStopping, LearningRateScheduler, TensorBoard
+from keras.callbacks import ModelCheckpoint, EarlyStopping, TensorBoard
 from keras.utils import to_categorical
-from keras import regularizers
-from keras.layers.convolutional import Conv3D, Conv2D
-from keras.layers.pooling import MaxPooling3D, MaxPooling2D
-from keras.layers.core import Dense, Activation, SpatialDropout3D, SpatialDropout2D, Flatten
-from keras.layers.wrappers import Bidirectional, TimeDistributed
-from keras.layers.recurrent import GRU, LSTM, SimpleRNN
-from keras.layers.normalization import BatchNormalization
-from keras.layers import Input, Dropout
+from keras.layers.core import Dense
+from keras.layers.wrappers import Bidirectional
+from keras.layers.recurrent import GRU, SimpleRNN
+from keras.layers import Dropout
 from keras.models import Sequential
 from keras.models import load_model
 from keras.optimizers import Adam, RMSprop
@@ -44,23 +35,15 @@ from keras import metrics
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import precision_score, recall_score, roc_auc_score, f1_score
 from sklearn.preprocessing import MinMaxScaler
-from sklearn.utils import shuffle
 import time
 
 import progressbar
-from progressbar import ETA, Bar, Percentage, RotatingMarker, Timer
-
-import threading
+from progressbar import ETA, Percentage, RotatingMarker
 
 import os
 import numpy as np
-from keras import backend as K
-from scipy import ndimage
 from scipy.misc import imresize
-from sklearn.model_selection import GridSearchCV
-from keras.wrappers.scikit_learn import KerasClassifier
 
-import csv
 import cv2
 import dlib
 import math
@@ -608,7 +591,7 @@ def get_facial_landmark_vectors_from_frame(frame):
         if len(facial_points) > 0:
             break
 
-    print('Returning ('+str(len(dets)) + ', ' + str(len(facial_points)))
+    print('Returning ('+str(len(dets)) + ', ' + str(len(facial_points)) + ')')
     return (dets, facial_points)
 
 
