@@ -28,7 +28,9 @@ The models directory contains 10 models with various network configurations.
 ```bash
 python lip_movement_net.py -v <path to test video file> -p <path to shape predictor file> -m <path to model .h5 file>
 ```
-The **test** directory contains a few test videos
+The [**videos**](videos/) directory contains a few test videos
+
+You can refer at the [test_video.sh](scripts/test_video.sh) file for a sample command.
 
 The name of the model file encodes the network's configuration as folows:
 
@@ -61,8 +63,8 @@ Training the model involves the following steps:
    3. [DISFA](http://www.engr.du.edu/mmahoor/DISFA.htm),
    4. [HMDB](http://serre-lab.clps.brown.edu/resource/hmdb-a-large-human-motion-database/),
    5. [Cohn-Kanade](http://www.pitt.edu/~emotion/ck-spread.htm),
-   **IMPORTANT**: Be sure to read the EULAs before you use any of these datasets. **Some datasets such as the Cohn-Kanade data set tend to be for non-commercial use only. If you are going to use this Lip Movement Net codebase for commercial use, you may not be able to use such datasets without the dataset owner's consent. Better check with the data set's owner first.**
-2. Organize the datasets as follows:
+2. **IMPORTANT**: Be sure to read the EULAs before you use any of these datasets. **Some datasets such as the Cohn-Kanade data set tend to be for non-commercial use only. If you are going to use this Lip Movement Net codebase for commercial use, you may not be able to use such datasets without the dataset owner's consent. Better check with the data set's owner first.**
+3. Organize the datasets as follows:
    1. Create a top level dataset/ directory
    2. Create a train/, val/, test/, models/ and tensorboard/ directories under dataset/
    3. Under each one of \[dataset/train/, dataset/val/, dataset/test/\] directories:
@@ -71,23 +73,23 @@ Training the model involves the following steps:
       4. Next, under each one of the dataset directories created in above step, such as GRID/ and HMDB/, create a directory for each person in that dataset. For e.g. the GRID dataset contains speakers numbered from 1 thru 34. So you would create a directory called dataset/train/speech/GRID/1/, dataset/train/speech/GRID/2/, dataset/train/speech/GRID/3/ etc. The HMDB dataset contains video files orgainzed by category such a talk, chew etc. Each video file is for one individual person. So just put all the video files under chew under dataset/train/silence/HMDB/, or dataset/val/silence/HMDB/ directories. No need to create individual person directories. The prepare script will assume that each video file belongs to a different person.
   4. Ensure that you have a good mix of speakers in train, val and test, and that **there are no common video files among train, val and test!**. Preferably keep a different disjoiint set of speakers or persons among train/, val/ and test/ directories for better training results.
   5. Download and expand the [sample_source_dataset.zip](assets/sample_source_dataset.zip) file to get started with the folder structure.
-3. Open prepare_training_dataset.py
-4. Set the following parameters to the values you want for your network:
+4. Open prepare_training_dataset.py
+5. Set the following parameters to the values you want for your network:
    1. VIDEO_START_OFFSETS
    2. VIDEO_END_OFFSETS
    3. CROSS_FILE_BOUNDARIES
-3. Run the following command:
+6. Run the following command:
 ```bash
 python prepare_training_dataset.py -i <path to input directory> -o <path to output sequences dataset directory> -p <path to facial landmarks model file>
 ```
-Refer to [prepare.bat](scripts/prepare.bat) for an example command.
+Refer to [prepare.sh](scripts/prepare.sh) for an example command.
 
-### Step 2 of 2: Run the trainer on the training data
+### Step 2 of 2: Run the trainer on the training data that you prepared using instructions in Step 1.
 Run the following command:
 ```bash
 python lip_movement_net.py -i <path to sequences dataset directory>
 ```
-Refer to scripts/train.bat for an example
+Refer to [train.sh](scripts/train.sh) for an example training command.
 
 ### Running the trainer in GRID SEARCH mode
 You can OPTIONALY run the training algorithm iteratively over a grid of network hyperparameters so as to find a parameter combination that best fits the needs of your domain.
@@ -104,25 +106,24 @@ To run the trainer in the Grid Search mode, perform these steps:
 ```bash
       python lip_movement_net.py -go <path to grid_options.csv>
 ```
-      Refer to scripts/generate_grid_options.bat for an example
+   Refer to [generate_grid_options.sh](scripts/generate_grid_options.sh) for a sample command.
 2. Run the following command to run the trainer in grid search mode:
 ```bash
    python lip_movement_net.py -go <path to grid_options.csv> -gr <path to grid results output CSV file> -i <path to sequences dataset directory>
 ```
-   Refer to scripts/train_using_grid_search.bat for an example
+   Refer to [train_using_grid_search.sh](scripts/train_using_grid_search.sh) for a sample command.
 
 ## Extending the network to detect other classes of lip motion
 Follow these steps to extend the network to detect other classes such **laughing, smiling, chewing etc**:
-1. In prepare_training_dataset.py, add class strings such as 'chew', laugh', 'smile' to the class_hash dictionary. for e.g.:
-class_hash = {'other': 0, 'speech': 1, 'chew': 2, 'laugh': 3}
+1. Get data for various facial action units of interest.
 2. Organize your training videos dataset as described earlier in this readme.
 3. Run the following command to create the training data:
 ```python
    python prepare_training_dataset.py -i <path to input directory> -o <path to output sequences dataset directory>
 ```
-4. In lip_movement_net.py, add the same class strings such as 'chew', laugh', 'smile' to the class_hash dictionary. for e.g.:
-class_hash = {'other': 0, 'speech': 1, 'chew': 2, 'laugh': 3}
-5. Run the trainer (or the grid search version) on the dataset created in step (3) so as to generate the model.
+4. In lip_movement_net.py, add the action unit class strings such as 'chew', laugh', 'smile' to the CLASS_HASH dictionary. for e.g.:
+CLASS_HASH = {'other': 0, 'speech': 1, 'chew': 2, 'laugh': 3}. Make sure the strings added to CLASS_HASH **exactly match** the names of the various action class directories in your dataset directory.  
+5. Run the trainer (or the grid search version) on the dataset you created in step (3) so as to generate the model.
 6. Test the model on your test video files, or on the output of a webcam.
 
 ## Why focus only on lip separation for detection speech, and not on other kinds of lip motions? And, what exactly is the detector learning?
